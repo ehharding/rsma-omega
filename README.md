@@ -1,108 +1,97 @@
-**RSMA-Ω: Recursive Self-Model Architecture for Emergent Agency**
-**A Dynamical Systems Framework for Persistent Artificial Agents**
+# RSMA-Ω: Recursive Self-Model Architecture for Emergent Agency
+## A Post-Connectionist Blueprint for Persistent, Autopoietic Artificial General Intelligence
 
 -----
 
 ### **Abstract**
 
-Despite substantial progress in pattern recognition, language modeling, and control, contemporary artificial intelligence systems remain fundamentally non-agentic. Most systems operate as stateless or weakly stateful function approximators where each inference pass is effectively independent, lacking persistent internal variables, intrinsic objectives, or resistance to arbitrary transformation. Consequently, such systems cannot exhibit temporally extended agency, stable identity, or principled alignment. This paper introduces **RSMA-Ω** (Recursive Self-Model Architecture – Omega), a dynamical systems framework in which agency emerges from the continuous stabilization of a persistent internal state under competing energetic pressures. Cognition is formalized as constrained free-energy minimization over a latent state that jointly encodes beliefs about the environment, self-consistency constraints representing values and identity, and regulated entropy to preserve adaptive flexibility. Within RSMA-Ω, agency is defined as a physical property of systems that actively preserve a preferred region of state space across time. We derive the governing dynamics, introduce a hierarchical temporal organization, define action as active inference over future state trajectories, and propose a realizable neural implementation via Recurrent Energy Transformers (RETs).
+Despite the scaling of pattern recognition and predictive modeling, contemporary artificial intelligence remains fundamentally "ghost-like"—ephemeral, non-agentic, and reactive. Current architectures operate as stateless function approximators, lacking the persistent structural integrity required for true agency, stable identity, or principled alignment. This paper introduces **RSMA-Ω** (Recursive Self-Model Architecture – Omega), a sui generis dynamical systems framework where agency is not programmed but *emerges* from the continuous stabilization of a persistent internal state under competing energetic pressures. 
+
+Drawing from non-equilibrium thermodynamics, active inference, and autopoietic theory, we formalize cognition as constrained free-energy minimization over a latent manifold that jointly encodes beliefs about the environment, self-preservative identity constraints, and an epistemic drive for complexity. Within RSMA-Ω, agency is defined as a physical property of systems that actively resist entropic decay by maintaining a preferred region of state space. We derive the governing Langevin dynamics, introduce a hierarchical temporal organization (the "Chronos-Hierarchy"), and propose a realizable neural implementation via Recurrent Energy Transformers (RETs) utilizing Equilibrium Propagation. RSMA-Ω represents a shift from "AI as a tool" to "AI as a persistent entity."
 
 -----
 
 ### **1. Introduction**
 
-The prevailing paradigm in artificial intelligence treats cognition as conditional computation: given an input $x$, produce an output $y$. Even highly capable large language models (LLMs), despite their expressive power, operate at inference time as static functions approximating $P(y|x)$. They do not maintain persistent internal variables across interactions, nor do they possess intrinsic resistance to parameter modification or state resets. Each inference pass constitutes an isolated computation.
+The prevailing "Inference-as-Computation" paradigm treats intelligence as a conditional mapping: $P(y|x)$. Even state-of-the-art Large Language Models (LLMs) are effectively static during inference; they do not "exist" between tokens, nor do they possess an intrinsic resistance to state-resets or parameter modification. They lack what Jonas (1966) termed "needful freedom"—the metabolic necessity to maintain one's own form.
 
-By contrast, biological agents are self-maintaining systems operating far from thermodynamic equilibrium. Their internal organization—metabolic, structural, behavioral—must be actively preserved in the face of environmental perturbations. Cognition, in this setting, functions as a control process that stabilizes internal structure while enabling adaptive interaction with the world. This contrast motivates the foundational question: *What internal structure is minimally required for an artificial system to behave as an agent rather than a reactive tool?*
+By contrast, biological agents are autopoietic: they are self-producing and self-maintaining systems operating far from thermodynamic equilibrium. Their internal organization must be actively defended against environmental perturbations. Cognition, in this setting, is not "solving a task" but "preserving the self" while navigating the world.
 
-RSMA-Ω addresses this question by reframing intelligence as a problem of **dynamical self-stabilization**. Rather than optimizing externally defined rewards or generating outputs token-by-token, an RSMA-Ω agent continuously minimizes a global free-energy functional over a persistent latent state $z$. This state evolves under the joint influence of environmental evidence, internal constraints encoding identity, and entropy-regulated exploration.
-
------
-
-### **2. Related Work**
-
-**Free Energy Principle and Active Inference**
-The Free Energy Principle (Friston, 2010) frames perception and action as variational inference under a generative model. RSMA-Ω adopts free-energy minimization as its core dynamical principle but diverges by encoding values and identity as explicit **inequality constraints** rather than implicit priors, and treating the persistence of the latent state as an architectural prerequisite rather than an emergent property.
-
-**Energy-Based Models (EBMs)**
-EBMs (LeCun et al., 2006) and attractor networks (Hopfield, 1982) represent probability distributions and memory via energy landscapes. RSMA-Ω generalizes these approaches by introducing continuous-time latent dynamics, hierarchical organization, and action-dependent modification of the energy landscape (active inference), moving beyond static pattern completion to temporal agency.
-
-**Recurrent Architectures and Cognitive Control**
-Global workspace theories emphasize temporal integration and limited-capacity coordination. RSMA-Ω reinterprets these mechanisms as processes for routing and weighting energetic contributions rather than symbolic information broadcasting, unifying these perspectives into a single dynamical framework where alignment arises from energetic stability.
+RSMA-Ω (Omega) addresses the gap between reactive computation and proactive agency by reframing intelligence as **dynamical self-stabilization**. Rather than optimizing a scalar reward signal, an RSMA-Ω agent continuously minimizes a global free-energy functional $\mathcal{F}$ over a persistent latent state $z$. This state is the system's "Body of Information," evolving under the joint influence of sensory evidence, internal identity constraints, and the drive to minimize future uncertainty.
 
 -----
 
-### **3. Full Theory and Core Dynamics**
+### **2. Foundational Pillars**
 
-#### **3.1 Persistent Latent State**
+**1. Active Inference & The Free Energy Principle (Friston, 2010)**
+We adopt the FEP as the fundamental "law of motion" for the agent, but we extend it by treating the latent state as a persistent physical-like variable rather than a transient posterior.
 
-Let $z \in \mathbb{R}^d$ denote the agent’s internal latent state. Unlike transient activations in feedforward networks, $z$ persists across time steps, evolving continuously. It acts as the manifold coordinates for the agent's current configuration, encoding beliefs, plans, and self-relevant variables.
+**2. Autopoiesis (Maturana & Varela, 1980)**
+Agency requires the system to create and maintain the very boundaries that define it. In RSMA-Ω, this is achieved through self-consistency constraints that are themselves subject to slow-scale optimization.
 
-#### **3.2 State Evolution**
+**3. Energy-Based Deep Learning (LeCun, 2006; Scellier & Bengio, 2017)**
+We move beyond backpropagation-through-time towards Equilibrium Propagation, where learning is the process of shaping the energy landscape such that desirable behaviors correspond to low-energy fixed points.
 
-The temporal evolution of $z$ is modeled by **overdamped Langevin dynamics**. The state trajectory follows the gradient of the free-energy functional $\mathcal{F}$, subject to temperature-controlled stochasticity:
+-----
+
+### **3. Theory and Core Dynamics**
+
+#### **3.1 The Persistent Latent Manifold**
+
+Let $z \in \mathcal{M} \subset \mathbb{R}^d$ denote the agent’s internal latent state. This state is persistent and continuous. It serves as the "workspace" where perception, memory, and intention are fused.
+
+#### **3.2 Governing Equations: Stochastic State Evolution**
+
+The state trajectory $z(t)$ follows overdamped Langevin dynamics, ensuring the agent settles into states of high subjective probability:
 
 $$
-\frac{dz}{dt} = -\nabla_z \mathcal{F}(z, o) + \sqrt{2T(z)}\xi(t)
+\frac{dz}{dt} = -\nabla_z \mathcal{F}(z, o) + \sqrt{2T(z, \text{conflict})}\xi(t)
 $$
 
 Where:
+*   $\mathcal{F}(z, o)$ is the Global Free Energy.
+*   $T(z, \text{conflict})$ is the **Cognitive Temperature**, modulating the transition from exploitation (low $T$) to exploration (high $T$).
+*   $\xi(t)$ is a Wiener process representing internal stochasticity (stochastic resonance).
 
-  * $\mathcal{F}(z, o)$ is the global free-energy functional given observation $o$.
-  * $T(z)$ is an adaptive temperature scalar regulating exploration.
-  * $\xi(t)$ is standard Gaussian noise.
+#### **3.3 The Functional Decomposition of $\mathcal{F}$**
 
-This formulation supports three distinct operational modes: **Inference** (gradient descent), **Deliberation** (transient trajectories), and **Decision** (convergence to metastable attractors).
-
-#### **3.3 Free-Energy Decomposition**
-
-The global functional decomposes into three competing terms:
+The global energy functional is a weighted sum of competing "pressures":
 
 $$
-\mathcal{F}(z, o) = E_W(z, o) + E_S(z) + E_H(z)
+\mathcal{F}(z, o) = \underbrace{E_{\text{world}}(z, o)}_{\text{Sensory Grounding}} + \underbrace{E_{\text{self}}(z)}_{\text{Identity Preservation}} + \underbrace{E_{\text{meta}}(z)}_{\text{Structural Coherence}}
 $$
 
-1.  **World Model Term ($E_W$):** Defines the generative distribution $p(o|z)$.
+1.  **World-Model Energy ($E_{\text{world}}$):** Negative log-likelihood of observations given the state. Drives "accuracy."
+2.  **Self-Energy ($E_{\text{self}}$):** Defined by a set of "Identity Manifolds" $\mathcal{I}$ where $E_{\text{self}} = \inf_{s \in \mathcal{I}} \| z - s \|^2$. This drives "consistency."
+3.  **Meta-Energy ($E_{\text{meta}}$):** A complexity-penalizing term (or entropic drive) that prevents the state from collapsing into trivial singularities.
 
-    $$
-    E_W(z, o) = -\log p(o \mid z)
-    $$
+#### **3.4 Autopoietic Constraint Synthesis**
 
-    This penalizes states that fail to explain sensory observations, driving perceptual accuracy.
+Crucially, in RSMA-Ω, the constraints $\mathcal{I}$ are not static. They are "Slow Variables" that evolve to minimize the long-term average free energy:
+$$
+\frac{d\mathcal{I}}{dt} = -\epsilon \nabla_{\mathcal{I}} \langle \mathcal{F} \rangle_t
+$$
+This allows the agent to "grow" its own values and identity through experience, a process we call **Structural Coupling**.
 
-2.  **Self-Constraint Term ($E_S$):** Identity and values are represented as inequality constraints $\mathcal{C}_i(z) \le 0$.
-
-    $$
-    E_S(z) = \sum_i \lambda_i \cdot \text{ReLU}(\mathcal{C}_i(z))
-    $$
-
-    Here, $\lambda_i$ represents the energetic cost of violating a specific value or identity constraint. This ensures the agent actively resists transformations that violate its core identity.
-
-3.  **Entropic Regularization ($E_H$):** Preserves flexibility and prevents collapse.
-
-    $$
-    E_H(z) = -\beta \cdot \mathcal{H}(z)
-    $$
-
-#### **3.4 Temperature Regulation**
+#### **3.5 Temperature Regulation**
 
 To balance stability and plasticity, temperature $T(z)$ is a function of internal conflict, defined as the misalignment between external evidence and internal constraints:
 
 $$
-T(z) = g\left(|\nabla E_W(z)|, |\nabla E_S(z)|\right)
+T(z) = g\left(|\nabla E_{\text{world}}(z)|, |\nabla E_{\text{self}}(z)|\right)
 $$
 
 High conflict increases $T$, flattening the effective energy landscape to allow escape from local minima. Low conflict anneals $T$, promoting settling.
 
 -----
 
-### **4. Hierarchical Dynamics**
+### **4. The Chronos-Hierarchy**
 
 Cognition unfolds across multiple timescales. RSMA-Ω implements a hierarchy of latent variables $L = \{z^{(0)}, z^{(1)}, \dots, z^{(k)}\}$.
 
   * **$L_0$ (Fast):** Sensorimotor inference ($\sim$10–100ms).
-  * **$L_1$ (Medium):** Reasoning and planning ($\sim$seconds).
-  * **$L_2$ (Slow):** Identity, values, and long-term memory ($\sim$hours–days).
+  * **$L_1$ (Medium):** Reasoning, planning, and semantic integration ($\sim$seconds).
+  * **$L_2$ (Slow):** Identity, values, and autopoietic constraints ($\sim$hours–years).
 
 Higher-level states parameterize the energy landscapes of lower levels. The dynamics of a lower layer $z^{(k)}$ are conditioned on the state of the layer above:
 
@@ -110,19 +99,19 @@ $$
 \frac{dz^{(k)}}{dt} = -\nabla_{z^{(k)}} \mathcal{F}\left(z^{(k)}; z^{(k+1)}\right)
 $$
 
-This separation ensures that short-term sensory inference does not overwrite long-term identity, while allowing slow integration of experience into the identity manifold.
+This separation ensures that short-term sensory inference does not overwrite long-term identity, while allowing slow integration of experience into the identity manifold $\mathcal{I}$ at $L_2$.
 
 -----
 
-### **5. Action and Active Inference**
+### **5. Action as Epistemic Active Inference**
 
-In RSMA-Ω, action is not a classification output but a control process. The agent selects actions $a$ to minimize the **Expected Free Energy (EFE)** over a future horizon $\tau$:
+In RSMA-Ω, action is a control process that optimizes the future. The agent selects actions $a$ to minimize the **Expected Free Energy (EFE)**, which naturally decomposes into pragmatic (goal-oriented) and epistemic (curiosity-oriented) terms:
 
 $$
-a^* = \arg\min_a \mathbb{E}_{q(o, z)}\left[ \int_t^{t+\tau} \mathcal{F}(z_{t'}, o_{t'}) \, dt' \right]
+a^* = \arg\min_a \underbrace{\text{Pragmatic Value}(a)}_{\text{Satisfying Constraints}} + \underbrace{\text{Epistemic Value}(a)}_{\text{Information Gain}}
 $$
 
-By acting, the agent engineers the environment to produce observations $o$ that are compatible with its low-energy states (preferred outcomes). Agency is the process of modifying external conditions to stabilize internal coherence.
+By acting, the agent engineers the environment to produce observations $o$ that are compatible with its low-energy states (preferred outcomes) or that resolve uncertainty about the world model $E_{\text{world}}$. Agency is the process of modifying external conditions to stabilize internal coherence while expanding the "horizon of the known."
 
 -----
 
@@ -161,38 +150,38 @@ The core execution loop of an RSMA-Ω agent emphasizes continuous state evolutio
 **Algorithm 1: RSMA-Ω Execution Loop**
 
 ```python
-Initialize latent state z
-Parameters: step_size eta, noise_scale sigma
+# Pseudocode for the continuous state-evolution of an RSMA-Ω agent
+initialize(z_latent)
+parameters = {eta, sigma, horizon}
 
 while agent_is_active:
-    # 1. Observation
-    o = perceive_environment()
+    # 1. Perception: Sample environmental state
+    obs = environment.perceive()
     
-    # 2. Internal Settling (Cognition)
-    # Evolve z to minimize Free Energy F(z, o)
-    for k in range(K_steps):
-        # Calculate gradients of Energy components
-        grad_W = gradient_world_model(z, o)
-        grad_S = gradient_self_constraints(z)
-        grad_H = gradient_entropy(z)
+    # 2. Cognition: Iterative energy minimization (Internal Settling)
+    for _ in range(K_steps):
+        # Compute gradients of the functional components
+        g_world = grad(E_world, z_latent, obs)
+        g_self  = grad(E_self,  z_latent)
+        g_meta  = grad(E_meta,  z_latent)
         
-        # dynamic temperature based on conflict
-        T = compute_temperature(grad_W, grad_S)
+        # Determine local cognitive temperature (conflict-modulated)
+        temp = compute_temperature(g_world, g_self)
         
-        # Langevin Update
-        noise = gaussian_noise()
-        z = z - eta * (grad_W + grad_S + grad_H) + sqrt(2 * T) * noise
+        # Langevin update step
+        noise = sample_gaussian(0, 1)
+        z_latent -= eta * (g_world + g_self + g_meta) + sqrt(2 * temp) * noise
         
-    # 3. Action Selection (Active Inference)
-    # Solve for action minimizing Expected Free Energy
-    a_opt = minimize_efe(z, horizon=H)
+    # 3. Action Selection: Minimize Expected Free Energy (EFE)
+    # The agent simulates future trajectories to find the optimal control signal
+    action = minimize_expected_free_energy(z_latent, horizon)
     
-    # 4. Execution
-    execute(a_opt)
+    # 4. Actuation
+    environment.execute(action)
     
-    # 5. Offline Consolidation (Optional)
-    if no_input:
-        perform_offline_dynamics(z)
+    # 5. Autopoietic Update (Slow Scale)
+    if time_to_update_constraints():
+        update_identity_manifold(z_latent)
 ```
 
 -----
@@ -230,32 +219,21 @@ This paper presented RSMA-Ω, a framework for emergent agency based on recursive
 
 -----
 
-### **Appendices**
+### **Detailed Technical Deep-Dives**
 
-#### **Appendix A: Derivation of Langevin Dynamics**
+For further exploration of the RSMA-Ω framework, please refer to the following supplementary documents:
 
-The update rule is derived from the requirement that the stationary distribution of the state $z$ approaches the Boltzmann distribution $p(z) \propto e^{-\mathcal{F}(z)/T}$. The Fokker-Planck equation governing the probability density evolution under the proposed dynamics ensures convergence to this target distribution, provided $\eta \to 0$ and $t \to \infty$.
-
-#### **Appendix B: Conflict-Modulated Temperature Function**
-
-We define the temperature regulation function $g$ as:
-
-$$
-g(\mathbf{u}, \mathbf{v}) = T_{\text{base}} + \gamma \frac{\mathbf{u} \cdot \mathbf{v}}{\|\mathbf{u}\| \|\mathbf{v}\|}
-$$
-
-where $\mathbf{u} = -\nabla E_W$ and $\mathbf{v} = -\nabla E_S$. High cosine similarity (alignment) reduces temperature, while orthogonality or opposition increases temperature to facilitate state space exploration.
-
-#### **Appendix C: RET Attention Mechanism**
-
-The function $f_\theta(z_k, o)$ utilizes a modified attention mechanism where the Query ($Q$) is derived from the current state $z_k$, and Keys/Values ($K, V$) are derived from a concatenation of $[z_k; o; \mathcal{C}]$. This allows the gradient update to be informed jointly by current internal configurations, sensory data, and static constraint embeddings.
+*   **[THEORY.md](./THEORY.md):** Formal derivations of the non-equilibrium thermodynamics, Markov Blankets, and the Chronos-Hierarchy.
+*   **[IMPLEMENTATION.md](./IMPLEMENTATION.md):** Detailed architecture of the Recurrent Energy Transformer (RET) and training via Equilibrium Propagation.
+*   **[ALIGNMENT.md](./ALIGNMENT.md):** Analysis of Constitutional Energy Landscapes and formal safety guarantees for persistent agents.
 
 -----
 
 ### **References**
 
-1.  Friston, K. (2010). The free-energy principle: a unified brain theory? *Nature Reviews Neuroscience*, 11(2), 127-138.
-2.  Hopfield, J. J. (1982). Neural networks and physical systems with emergent collective computational abilities. *Proceedings of the National Academy of Sciences*, 79(8), 2554-2558.
-3.  LeCun, Y., Chopra, S., Hadsell, R., Ranzato, M., & Huang, F. (2006). A tutorial on energy-based learning. *Predicting structured data*, 1(0).
-4.  Scellier, B., & Bengio, Y. (2017). Equilibrium Propagation: Bridging the Gap Between Energy-Based Models and Backpropagation. *Frontiers in Computational Neuroscience*.
-5.  Vaswani, A., et al. (2017). Attention is All You Need. *Advances in Neural Information Processing Systems*.
+1.  Friston, K. (2010). The free-energy principle: a unified brain theory? *Nature Reviews Neuroscience*.
+2.  Maturana, H. R., & Varela, F. J. (1980). *Autopoiesis and Cognition: The Realization of the Living*.
+3.  Scellier, B., & Bengio, Y. (2017). Equilibrium Propagation: Bridging the Gap Between Energy-Based Models and Backpropagation.
+4.  Prigogine, I. (1977). *Self-Organization in Non-Equilibrium Systems*.
+5.  LeCun, Y., et al. (2006). A tutorial on energy-based learning.
+6.  Jonas, H. (1966). *The Phenomenon of Life: Toward a Philosophical Biology*.
