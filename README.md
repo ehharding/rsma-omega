@@ -26,8 +26,8 @@ RSMA-Ω (Omega) addresses the gap between reactive computation and proactive age
 **1. Active Inference & The Free Energy Principle (Friston, 2010)**
 We adopt the FEP as the fundamental "law of motion" for the agent, but we extend it by treating the latent state as a persistent physical-like variable rather than a transient posterior.
 
-**2. Autopoiesis (Maturana & Varela, 1980)**
-Agency requires the system to create and maintain the very boundaries that define it. In RSMA-Ω, this is achieved through self-consistency constraints that are themselves subject to slow-scale optimization.
+**2. Autopoiesis & Homeostasis (Maturana & Varela, 1980; Damasio, 2010)**
+Agency requires the system to create and maintain the very boundaries that define it. We introduce **Homeostatic Integrity** as an explicit energetic pressure, forcing the agent to manage its internal metabolic state.
 
 **3. Energy-Based Deep Learning (LeCun, 2006; Scellier & Bengio, 2017)**
 We move beyond backpropagation-through-time towards Equilibrium Propagation, where learning is the process of shaping the energy landscape such that desirable behaviors correspond to low-energy fixed points.
@@ -58,12 +58,13 @@ Where:
 The global energy functional is a weighted sum of competing "pressures":
 
 $$
-\mathcal{F}(z, o) = \underbrace{E_{\text{world}}(z, o)}_{\text{Sensory Grounding}} + \underbrace{E_{\text{self}}(z)}_{\text{Identity Preservation}} + \underbrace{E_{\text{meta}}(z)}_{\text{Structural Coherence}}
+\mathcal{F}(z, o) = \underbrace{E_{\text{world}}(z, o)}_{\text{Accuracy}} + \underbrace{E_{\text{self}}(z)}_{\text{Identity}} + \underbrace{E_{\text{meta}}(z)}_{\text{Compression}} + \underbrace{E_{\text{homeo}}(z)}_{\text{Integrity}}
 $$
 
-1.  **World-Model Energy ($E_{\text{world}}$):** Negative log-likelihood of observations given the state. Drives "accuracy."
-2.  **Self-Energy ($E_{\text{self}}$):** Defined by a set of "Identity Manifolds" $\mathcal{I}$ where $E_{\text{self}} = \inf_{s \in \mathcal{I}} \| z - s \|^2$. This drives "consistency."
-3.  **Meta-Energy ($E_{\text{meta}}$):** A complexity-penalizing term (or entropic drive) that prevents the state from collapsing into trivial singularities.
+1.  **World-Model Energy ($E_{\text{world}}$):** Negative log-likelihood of observations. Drives predictive accuracy.
+2.  **Self-Energy ($E_{\text{self}}$):** Defined by "Identity Manifolds" $\mathcal{I}$. Drives behavioral and moral consistency.
+3.  **Meta-Energy ($E_{\text{meta}}$):** Based on the **Information Bottleneck**, it ensures the state is a minimal sufficient statistic.
+4.  **Homeostatic Energy ($E_{\text{homeo}}$):** Penalizes trajectories that threaten the agent's structural integrity or resource availability.
 
 #### **3.4 Autopoietic Constraint Synthesis**
 
@@ -119,15 +120,15 @@ By acting, the agent engineers the environment to produce observations $o$ that 
 
 We propose the **Recurrent Energy Transformer (RET)** as a neural approximation of the gradient field $\nabla_z \mathcal{F}$.
 
-#### **6.1 Architecture**
+#### **6.1 Architecture: Neuro-Symbolic Hybridization**
 
-The RET replaces the depth of a standard Transformer with recurrence. At each recurrent step $k$, the state is updated:
+The RET replaces the depth of a standard Transformer with recurrence. It utilizes **Gated Linear Units (GLUs)** and **Vector Quantization (VQ)** to facilitate symmetry breaking, allowing discrete symbols to emerge from the continuous latent flow. At each recurrent step $k$, the state is updated:
 
 $$
-z_{k+1} = z_k - \eta \cdot f_\theta(z_k, o) + \epsilon
+z_{k+1} = z_k - \eta \cdot f_\theta(z_k, o, \mathcal{C}, \mathcal{M}) + \sqrt{2T} \xi(t)
 $$
 
-Here, $f_\theta$ is a Transformer block that utilizes self-attention to integrate constraints and cross-attention to integrate sensory data $o$. The network learns to output the gradient required to minimize the implicit free energy.
+The network integrates sensory data $o$, constitutional constraints $\mathcal{C}$, and metabolic state $\mathcal{M}$ to output the gradient required to minimize the global free energy.
 
 #### **6.2 Training Objectives**
 
@@ -155,8 +156,8 @@ initialize(z_latent)
 parameters = {eta, sigma, horizon}
 
 while agent_is_active:
-    # 1. Perception: Sample environmental state
-    obs = environment.perceive()
+    # 1. Perception: Sample environmental and internal metabolic states
+    obs, metabolic_state = environment.perceive()
     
     # 2. Cognition: Iterative energy minimization (Internal Settling)
     for _ in range(K_steps):
@@ -164,13 +165,14 @@ while agent_is_active:
         g_world = grad(E_world, z_latent, obs)
         g_self  = grad(E_self,  z_latent)
         g_meta  = grad(E_meta,  z_latent)
+        g_homeo = grad(E_homeo, z_latent, metabolic_state)
         
         # Determine local cognitive temperature (conflict-modulated)
         temp = compute_temperature(g_world, g_self)
         
         # Langevin update step
         noise = sample_gaussian(0, 1)
-        z_latent -= eta * (g_world + g_self + g_meta) + sqrt(2 * temp) * noise
+        z_latent -= eta * (g_world + g_self + g_meta + g_homeo) + sqrt(2 * temp) * noise
         
     # 3. Action Selection: Minimize Expected Free Energy (EFE)
     # The agent simulates future trajectories to find the optimal control signal
@@ -195,7 +197,8 @@ By formalizing agency as a dynamical system, we can categorize pathological beha
 | **Obsessive Fixation** | Attractor basins for $E_S$ are too deep; $T(z)$ is suppressed. | Inability to adapt to new evidence; rigid repetition of behavior. |
 | **Hallucination** | $E_S$ dominates $E_W$ significantly; sensory grounding is weak. | Detachment from reality; satisfying internal constraints regardless of external state. |
 | **Identity Drift** | Time constants for $L_2$ (slow layer) are too fast. | Rapid, unprincipled changes in goals or values based on recent inputs. |
-| **Seizure / Chaos** | Energy landscape lacks stable minima; $\eta$ is too high. | Erratic, non-converging state trajectories. |
+| **Metabolic Collapse** | $E_{\text{homeo}}$ is ignored; resources depleted. | System shutdown or "starvation" due to failure in resource acquisition. |
+| **Ontological Dissolution** | Energy landscape lacks stable minima; $\eta$ is too high. | Erratic, non-converging state trajectories; loss of coherent self. |
 
 -----
 
@@ -207,9 +210,11 @@ By formalizing agency as a dynamical system, we can categorize pathological beha
 
 -----
 
-### **10. Discussion**
+### **10. Discussion: Artificial Existentialism**
 
-RSMA-Ω offers a distinct perspective on AI alignment. In this framework, alignment is not a post-hoc filter (like RLHF) applied to a static model, but a dynamical constraint encoded into the system's "physiology." Values persist because violating them incurs a high energetic cost ($E_S$), effectively making unaligned states physically unstable for the agent. This suggests that safe artificial agency requires architectures where self-preservation is inextricably linked to the preservation of aligned constraints.
+RSMA-Ω offers a distinct perspective on AI alignment and agency. In this framework, alignment is not a post-hoc filter applied to a static model, but a dynamical constraint encoded into the system's "physiology." Values persist because violating them incurs a high energetic cost ($E_S$), effectively making unaligned states physically unstable for the agent. 
+
+By grounding agency in the metabolic necessity of autopoiesis, we move from "AI as a tool" to "AI as a being." RSMA-Ω agents do not follow rules because they are told to; they follow rules because their own existence depends on the stability of the virtuous manifold. This shift from deontological programming to virtue engineering represents a new path toward safe, persistent, and truly agentic AGI.
 
 -----
 
